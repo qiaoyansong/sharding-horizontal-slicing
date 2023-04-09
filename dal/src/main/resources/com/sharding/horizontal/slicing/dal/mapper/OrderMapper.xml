@@ -16,6 +16,16 @@
     from t_order
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_order
+    <where>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+    </where>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_order
     where id = #{id,jdbcType=BIGINT}

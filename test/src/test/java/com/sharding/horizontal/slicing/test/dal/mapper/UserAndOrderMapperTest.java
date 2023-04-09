@@ -1,5 +1,6 @@
 package com.sharding.horizontal.slicing.test.dal.mapper;
 
+import com.sharding.horizontal.slicing.dal.condition.SelectOrderCondition;
 import com.sharding.horizontal.slicing.dal.domain.Order;
 import com.sharding.horizontal.slicing.dal.domain.User;
 import com.sharding.horizontal.slicing.dal.mapper.OrderMapper;
@@ -25,22 +26,62 @@ public class UserAndOrderMapperTest extends BaseTestApplication {
 
     @Test
     public void insertSelective_Test_Simple() {
+        generateOrderLists1();
+        generateOrderLists2();
+    }
+
+    /**
+     * 根据用户ID查询数据
+     */
+    @Test
+    public void selectByCondition_Test_Simple() {
+        SelectOrderCondition condition = new SelectOrderCondition();
+        condition.setUserId(3L);
+        orderMapper.selectByCondition(condition).forEach(System.out::println);
+    }
+
+    /**
+     * 查询所有数据
+     */
+    @Test
+    public void selectByCondition_Test_FetchAll() {
+        orderMapper.selectByCondition(new SelectOrderCondition()).forEach(System.out::println);
+    }
+
+    private void generateOrderLists2() {
         User user = new User();
-        user.setUname("强哥");
+        user.setUname("强哥2号");
         userMapper.insertSelective(user);
 
+
         Order order = new Order();
-        order.setOrderNo("ATGUIGU001");
+        order.setUserId(user.getId());
+        order.setAmount(new BigDecimal(200));
+
+        Order order2 = new Order();
+        order2.setUserId(user.getId());
+        order2.setAmount(new BigDecimal(20));
+
+        orderMapper.insertSelective(order);
+        orderMapper.insertSelective(order2);
+    }
+
+    private void generateOrderLists1() {
+        User user = new User();
+        user.setUname("强哥1号");
+        userMapper.insertSelective(user);
+
+
+        Order order = new Order();
         order.setUserId(user.getId());
         order.setAmount(new BigDecimal(100));
 
-        orderMapper.insertSelective(order);
-    }
+        Order order2 = new Order();
+        order2.setUserId(user.getId());
+        order2.setAmount(new BigDecimal(10));
 
-    @Test
-    public void transaction_Test_Simple() {
-        System.out.println(userMapper.selectByPrimaryKey(1L));
-        System.out.println(orderMapper.selectByPrimaryKey(1L));
+        orderMapper.insertSelective(order);
+        orderMapper.insertSelective(order2);
     }
 
 }

@@ -22,7 +22,7 @@
     insert into t_user (id, uname)
     values (#{id,jdbcType=BIGINT}, #{uname,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sharding.horizontal.slicing.dal.domain.User">
+  <insert id="insertSelective" parameterType="com.sharding.horizontal.slicing.dal.domain.User" keyProperty="id" useGeneratedKeys="true">
     insert into t_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
